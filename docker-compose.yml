@@ -19,9 +19,10 @@ services:
       - db
   frontend:
     env_file: .env
+    command: cp -r /app/build/. /frontend_static/
     # А тут подключаем volume со статикой к gateway
     volumes:
-      - static:/staticfiles
+      - static:/frontend_static
     build: ./frontend/
 # Добавляем новый контейнер: gateway
   gateway:
@@ -33,6 +34,8 @@ services:
     # на порт 80 контейнера
     ports:
       - 8000:80
+    volumes:
+      - static:/staticfiles
     depends_on:
       - backend
       - frontend
